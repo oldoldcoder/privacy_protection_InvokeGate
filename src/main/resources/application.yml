@@ -1,0 +1,58 @@
+server:
+  port: 8080
+# \u5177\u4F53\u6587\u4EF6\u5B58\u653E\u7684\u8DEF\u5F84
+path:
+  distributed:
+    # \u5206\u5E03\u5F0F\u8303\u56F4\u67E5\u8BE2 distributed_range_search
+    drs: ""
+    # \u5206\u5E03\u5F0F\u6700\u8FD1\u90BB\u67E5\u8BE2
+    drsq: ""
+  notDistributed:
+    # kdtree\u67E5\u8BE2\u7B97\u6CD5
+    range_search: ""
+    # knn\u67E5\u8BE2\u6700\u8FD1\u90BB
+    rsq: ""
+    # \u5929\u9645\u7EBF\u67E5\u8BE2\u7B97\u6CD5skyline
+    skyline: ""
+    # \u5B89\u5168\u5173\u952E\u5B57\u67E5\u8BE2\u7B97\u6CD5security_word_query
+    skq: ""
+    # \u5B89\u5168\u76F8\u4F3C\u6027\u67E5\u8BE2
+    ssq: ""
+# \u5177\u4F53\u670D\u52A1\u76D1\u542C\u7684\u7AEF\u53E3\u5730\u5740
+port:
+  distributed:
+
+  notDistributed:
+    range_search:
+      port: ""
+      address: "localhost"
+
+# \u6587\u4EF6\u4E0A\u4F20\u90E8\u5206
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 60MB
+      file-size-threshold: 30MB
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://localhost:3306/heartmelody?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+      username:
+      password:
+      # \u521D\u59CB\u8FDE\u63A5\u6570
+      initialSize: 5
+      # \u6700\u5C0F\u8FDE\u63A5\u6C60\u6570\u91CF
+      minIdle: 5
+      # \u6700\u5927\u8FDE\u63A5\u6C60\u6570\u91CF
+      maxActive: 50
+      # \u914D\u7F6E\u83B7\u53D6\u8FDE\u63A5\u7B49\u5F85\u8D85\u65F6\u7684\u65F6\u95F4
+      maxWait: 60000
+      # \u914D\u7F6E\u95F4\u9694\u591A\u4E45\u624D\u8FDB\u884C\u4E00\u6B21\u68C0\u6D4B\uFF0C\u68C0\u6D4B\u9700\u8981\u5173\u95ED\u7684\u7A7A\u95F2\u8FDE\u63A5\uFF0C\u5355\u4F4D\u662F\u6BEB\u79D2
+      timeBetweenEvictionRunsMillis: 60000
+
+# \u65E5\u5FD7\u6253\u5370\u6A21\u5757
+logging:
+  level:
+    root: INFO
