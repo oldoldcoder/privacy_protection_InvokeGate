@@ -26,7 +26,7 @@ import java.net.Socket;
 @Api("非分布式-kdtree查询算法的controller")
 @Slf4j
 public class RangeSearchController {
-    // 对应端口
+    /*// 对应端口
     @Value("${port.notDistributed.range_search.port}")
     private String PORT;
     // 对应地址
@@ -105,7 +105,7 @@ public class RangeSearchController {
     public ResponseEntity<String> query(){
         try {
             // 进行socket通信
-            String result = service.saveFile(file,pathResolveUtils.RANGE_SEARCH_PATH + QUERY_FILE);
+            String result = service.saveFile(null,pathResolveUtils.RANGE_SEARCH_PATH + QUERY_FILE);
             // 假设成功处理后返回一个成功消息
             return ResponseEntity.ok(result);
         } catch (Exception e) {
@@ -113,6 +113,6 @@ public class RangeSearchController {
             String errorMessage = "An error occurred: " + e.getMessage();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
-    }
+    }*/
 
 }

@@ -12,24 +12,14 @@ import java.util.Map;
 @Component
 public class PathResolveUtils {
     // 配置路径属性值
-    @Value("${path.distributed.drs}")
-    public  String DRS_PATH;
+    @Value("${path.eTPSS.cmd}")
+    public  String pathETPSSCmd;
 
-    @Value("${path.distributed.drsq}")
-    public  String DRSQ_PATH;
+    @Value("${path.eTPSS.data}")
+    public String pathETPSSData;
 
-    @Value("${path.notDistributed.range_search}")
-    public  String RANGE_SEARCH_PATH;
+    @Value("${path.eTPSS.res}")
+    public String pathETPSSRes;
 
-    @Value("${path.notDistributed.rsq}")
-    public  String RSQ_PATH;
 
-    @Value("${path.notDistributed.skyline}")
-    public  String SKYLINE_PATH;
-
-    @Value("${path.notDistributed.skq}")
-    public  String SKQ_PATH;
-
-    @Value("${path.notDistributed.ssq}")
-    public  String SSQ_PATH;
 }
