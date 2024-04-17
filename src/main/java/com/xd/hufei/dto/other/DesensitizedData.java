@@ -10,10 +10,11 @@ import java.math.BigInteger;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DesensitizedData {
-
-    BigInteger originalNumber;
+    Integer id;
+    BigInteger originalValue;
 
     BigInteger cs1;
     BigInteger cs2;
     BigInteger cs3;
+    
 }

@@ -1,5 +1,6 @@
 package com.xd.hufei.controller.other;
 
+import com.xd.hufei.dto.other.DesensitizedData;
 import com.xd.hufei.services.other.CommonService;
 import com.xd.hufei.utils.PathResolveUtils;
 import com.xd.hufei.utils.StatusUtils;
@@ -38,7 +39,7 @@ public class CommonController {
                 throw new Exception("动态切换数据源错误");
             }
             // 进行读取数据源
-            List<BigInteger> bigIntegers = commonService.readTableGetList(table);
+            List<DesensitizedData> bigIntegers = commonService.readTableGetList(table);
             if(bigIntegers == null){
                 throw new Exception("从" + table + "读取数据失败");
             }

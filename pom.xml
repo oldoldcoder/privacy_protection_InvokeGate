@@ -41,11 +41,6 @@
         <!--使用日志框架-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId> <!-- 使用Log4j2作为日志框架 -->
         </dependency>
 
@@ -83,7 +78,12 @@
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
             <version>3.1.0</version>
         </dependency>
-
+        <!--mysql-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.13</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

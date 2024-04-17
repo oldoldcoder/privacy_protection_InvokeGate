@@ -2,21 +2,25 @@ package com.xd.hufei.utils;
 
 import org.springframework.stereotype.Component;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class DataBaseUrlParser {
     public static DatabaseInfo parseDatabaseUrl(String databaseUrl) {
         try {
-            URI uri = new URI("jdbc:" + databaseUrl);
+            URI uri = new URI(databaseUrl);
             String userInfo = uri.getUserInfo();
             String username = null;
             String password = null;
             if (userInfo != null) {
                 String[] parts = userInfo.split(":");
                 if (parts.length == 2) {
-                    username = parts[0];
-                    password = parts[1];
+                    // TODO 目前这里是暂时的计策，后续如果没有特殊符号传递，我应该会就这样留着
+                    username = "root";
+                    password = "T3stP@ssw0rd!";
                 }
             }
             String host = uri.getHost();
@@ -31,7 +35,7 @@ public class DataBaseUrlParser {
             e.printStackTrace();
             return null;
         }
-    }
+        }
 
     public static class DatabaseInfo {
         private final String url;

@@ -3,9 +3,9 @@ server:
 # 存储文件的路径
 path:
   eTPSS:
-    cmd: ""
-    data: ""
-    res : ""
+    cmd: "/root/project4/c/eTPSS/build/eTPSS"
+    data: "/root/project4/data/eTPSS/data.txt"
+    res : "/root/project4/data/eTPSS/res.txt"
 #path:
 #  distributed:
 #    drs:
@@ -63,7 +63,9 @@ spring:
       maxActive: 50
       maxWait: 60000
       timeBetweenEvictionRunsMillis: 60000
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
 swagger:
   enabled: true
 logging:

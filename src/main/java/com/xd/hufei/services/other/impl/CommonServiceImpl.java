@@ -55,14 +55,14 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public List<BigInteger> readTableGetList(String tableName) {
-        List<BigInteger> res = commonMapper.getData2desensitization(tableName);
+    public List<DesensitizedData> readTableGetList(String tableName) {
+        List<DesensitizedData> res = commonMapper.getData2desensitization(tableName);
         // 等待处理
         return res;
     }
 
     @Override
-    public int saveFile(String path, /*TODO data暂时没有写入，不了解格式*/List<BigInteger> data) {
+    public int saveFile(String path, /*TODO data暂时没有写入，不了解格式*/List<DesensitizedData> data) {
         // 保存文件在某处
         try {
             File file = new File(path);
