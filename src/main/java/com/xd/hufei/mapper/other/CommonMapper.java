@@ -12,6 +12,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface CommonMapper {
     List<DesensitizedData> getData2desensitization(@Param("tableName") String tableName);
-    int createTable(@Param("tableName") String tableName,@Param("parameters") Map<String, String> parameters );
-    int insertNewData(@Param("List") List<DesensitizedData> data, @Param("tableName") String tableName);
+    int createTable(@Param("tableName") String tableName);
+    int insertNewData(@Param("list") List<DesensitizedData> data, @Param("tableName") String tableName);
 }

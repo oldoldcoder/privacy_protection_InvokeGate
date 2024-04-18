@@ -40,7 +40,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         if(name == null){
             name = "new";
         }
-        String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false";
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl(url);
         dataSource.setUsername(username);

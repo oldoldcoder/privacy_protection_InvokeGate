@@ -52,9 +52,7 @@ public class CommonController {
                 throw new Exception("执行eTPSS失败");
             }
             // 切换本地数据库
-            if(commonService.switchDataSources("default") == StatusUtils.ERROR){
-                throw new Exception("动态切换数据源错误");
-            }
+            commonService.switchDataSources("default");
             // 读取结果文件，写入
             String createTableName = commonService.readFileAndWriteTable(pathResolveUtils.pathETPSSRes);
             if(createTableName == null){

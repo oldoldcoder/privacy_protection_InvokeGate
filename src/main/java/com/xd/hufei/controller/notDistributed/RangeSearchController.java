@@ -19,26 +19,22 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/ND/range_search")
 @Api("非分布式-kdtree查询算法的controller")
 @Slf4j
 public class RangeSearchController {
-    /*// 对应端口
+    // 对应端口
     @Value("${port.notDistributed.range_search.port}")
     private String PORT;
     // 对应地址
     @Value("${port.notDistributed.range_search.address}")
     private String ADDRESS;
 
-    // 存储数据的后缀
-    private static String DATA_FILE = "/RANGE_FILE.txt";
-    // 查询数据的后缀
-    private static String QUERY_FILE = "/QUERY_FILE.txt";
-    // 结果的后缀
-    private static String RES_FILE = "/RES_FILE.txt";
 
     @Autowired
     RangeSearchService service;
@@ -50,6 +46,9 @@ public class RangeSearchController {
     private void init() {
         try {
             socket = new Socket(ADDRESS, Integer.parseInt(PORT));
+            // 阻塞连接3分钟
+            socket.connect(new InetSocketAddress(ADDRESS, Integer.parseInt(PORT)),3 * 60 * 1000);
+
         }catch (Exception e){
             e.printStackTrace();
             log.error("无法连接到非分布式range_search服务");
@@ -113,6 +112,6 @@ public class RangeSearchController {
             String errorMessage = "An error occurred: " + e.getMessage();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
-    }*/
+    }
 
 }

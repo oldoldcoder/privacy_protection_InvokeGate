@@ -3,9 +3,11 @@ server:
 # 存储文件的路径
 path:
   eTPSS:
-    cmd: "/root/project4/c/eTPSS/build/eTPSS"
-    data: "/root/project4/data/eTPSS/data.txt"
-    res : "/root/project4/data/eTPSS/res.txt"
+    #    cmd: "/root/project4/c/eTPSS/build/eTPSS"
+    #    data: "/root/project4/data/eTPSS/data.txt"
+    #    res : "/root/project4/data/eTPSS/res.txt"
+    data: "data/data.txt"
+    res: "data/res.txt"
 #path:
 #  distributed:
 #    drs:
@@ -55,7 +57,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
-      url: jdbc:mysql://10.10.55.25:3306/heartmelody?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+      url: jdbc:mysql://10.10.55.25:3306/test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
       username: root
       password: T3stP@ssw0rd!
       initialSize: 5

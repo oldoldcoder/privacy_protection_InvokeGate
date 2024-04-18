@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -29,6 +31,7 @@ public class CommonServiceImpl implements CommonService {
 
     @Autowired
     private CommonMapper commonMapper;
+    // 出错应该删除当前的数据库链接
     @Override
     public int switchDataSources(String url) {
         try{
@@ -62,7 +65,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public int saveFile(String path, /*TODO data暂时没有写入，不了解格式*/List<DesensitizedData> data) {
+    public int saveFile(String path, List<DesensitizedData> data) {
         // 保存文件在某处
         try {
             File file = new File(path);
@@ -75,16 +78,22 @@ public class CommonServiceImpl implements CommonService {
             FileWriter fileWriter = new FileWriter(path);
             // 创建 BufferedWriter 对象，用于写入文件
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            // 向文件写入内容
-            bufferedWriter.write("Hello, world!\n");
-            bufferedWriter.write("This is a test.\n");
+            bufferedWriter.write(data.size() + "\n");
+            data.forEach((a)->{
+                try {
+                    bufferedWriter.write(a.getOriginalValue().toString() + "\n");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
             bufferedWriter.flush();
             bufferedWriter.close();
             fileWriter.close();
 
             log.info("文件写入成功");
             return StatusUtils.SUCCESS;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return StatusUtils.ERROR;
@@ -103,6 +112,9 @@ public class CommonServiceImpl implements CommonService {
             }
             // 获取程序的退出码
             int exitCode = process.exitValue();
+            if(exitCode != StatusUtils.SUCCESS){
+                return StatusUtils.ERROR;
+            }
             log.info("eTPSS程序执行返回码:"+exitCode);
             return StatusUtils.SUCCESS;
         } catch (IOException | InterruptedException e) {
@@ -151,8 +163,9 @@ public class CommonServiceImpl implements CommonService {
                 dataList.add(data1);
             }
             String tableName = "temp1" + System.currentTimeMillis();
+
             // 对于结果数据写入库里
-            commonMapper.createTable(tableName,null);
+            commonMapper.createTable(tableName);
             commonMapper.insertNewData(dataList,tableName);
             return tableName;
         } catch (IOException e) {

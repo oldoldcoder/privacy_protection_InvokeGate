@@ -5,19 +5,19 @@
         id, originalValue
     </sql>
     <insert id="insertNewData" parameterType="java.util.List">
-        INSERT INTO your_table_name (column1, column2, column3)
+        INSERT INTO ${tableName} (CS1, CS2, CS3)
         VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.field1}, #{item.field2}, #{item.field3})
+            (#{item.cs1}, #{item.cs2}, #{item.cs3})
         </foreach>
     </insert>
 
     <update id="createTable">
             CREATE TABLE ${tableName} (
                   id INT PRIMARY KEY AUTO_INCREMENT,
-        <foreach collection="parameters.entrySet()" item="entry" separator=",">
-            ${entry.key} ${entry.value}
-        </foreach>
+                  CS1 varchar(255),
+                  CS2 varchar(255),
+                  CS3 varchar(255)
             )
      </update>
 
