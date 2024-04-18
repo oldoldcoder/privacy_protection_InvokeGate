@@ -21,5 +21,13 @@ public class PathResolveUtils {
     @Value("${path.eTPSS.res}")
     public String pathETPSSRes;
 
+    @Value("${path.notDistributed.range_search.data}")
+    public String pathRangeSearchData;
+
+    @Value("${path.notDistributed.range_search.res}")
+    public String pathRangeSearchRes;
+    @Value("${path.notDistributed.range_search.queryFile}")
+    public String pathRangeSearchQueryFile;
+
 
 }

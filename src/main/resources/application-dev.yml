@@ -3,7 +3,7 @@ server:
 # 存储文件的路径
 path:
   eTPSS:
-    #    cmd: "/root/project4/c/eTPSS/build/eTPSS"
+    cmd: "/root/project4/c/eTPSS/build/eTPSS"
     #    data: "/root/project4/data/eTPSS/data.txt"
     #    res : "/root/project4/data/eTPSS/res.txt"
     data: "data/data.txt"
@@ -18,11 +18,11 @@ path:
 #      cmd: ""
 #      data: ""
 #      res: ""
-#  notDistributed:
-#    range_search:
-#      cmd: ""
-#      data : ""
-#      res : ""
+  notDistributed:
+    range_search:
+      data : "/root/project4/data/range_search/data.txt"
+      queryFile : "/root/project4/data/range_search/query.txt"
+      res : "/root/project4/data/range_search/res.txt"
 #    rsq:
 #      cmd: ""
 #      data: ""
@@ -44,8 +44,8 @@ port:
 
   notDistributed:
     range_search:
-      port: ""
-      address: "localhost"
+      port: "9990"
+      address: "10.170.53.52"
 
 spring:
   servlet:
@@ -73,3 +73,5 @@ swagger:
 logging:
   level:
     root: INFO
+
+cmd: "/root/project4/c/range_search/build/range_search"
