@@ -19,9 +19,9 @@
         </foreach>
     </insert>
     <insert id="createCopyTable">
-        <if test="tableColumns != null and tableColumns.size() > 0">
+        <if test="columns != null and columns.size() > 0">
             CREATE TABLE ${tableName} (
-            <foreach item="column" collection="tableColumns" separator=",">
+            <foreach item="column" collection="columns" separator=",">
                 ${column.columnName} ${column.dataType}
                 <if test="column.characterMaximumLength != null">
                     (${column.characterMaximumLength})
@@ -34,7 +34,7 @@
 
     <select id="getDataFromTable" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT *
-        FROM #{tableName}
+        FROM ${tableName}
     </select>
 
     <select id="getTableStructure" resultType="com.xd.hufei.dto.other.TableColumn">

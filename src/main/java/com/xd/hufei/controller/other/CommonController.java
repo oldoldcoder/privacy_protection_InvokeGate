@@ -51,7 +51,7 @@ public class CommonController {
                 throw new IllegalArgumentException("动态切换数据源错误");
             }
             // 进行读取数据源
-            List<Map<String,String>> data = commonService.readTableGetList(table);
+            List<Map<String,Object>> data = commonService.readTableGetList(table);
             if(data == null){
                 throw new IllegalArgumentException("从" + table + "读取数据失败");
             }
@@ -60,8 +60,14 @@ public class CommonController {
             // 分离出来dataBaseName
             String dataBaseName = url.substring(url.lastIndexOf('/') + 1);
             List<TableColumn> tableStructure = commonService.getTableStructure(dataBaseName, table);
+
+            // 进行读取数据源
+            List<Map<String,Object>> data1 = commonService.readTableGetList(table);
             // 切换本地数据库
             commonService.switchDataSources("default");
+
+            // 进行读取数据源
+            List<Map<String,Object>> data2 = commonService.readTableGetList(table);
             String newTable = commonService.writeTable(table, tableStructure, data);
 
             if(newTable == null){

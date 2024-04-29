@@ -61,12 +61,12 @@ public class CommonServiceImpl implements CommonService {
         return StatusUtils.ERROR;
     }
 
-    public List<Map<String,String>> readTableGetList(String tableName){
-        List<Map<String,String>> res = commonMapper.getDataFromTable(tableName);
+    public List<Map<String,Object>> readTableGetList(String tableName){
+        List<Map<String,Object>> res = commonMapper.getDataFromTable(tableName);
         return res;
     }
     // 读取结果文件，写入,返回的表名
-    public String writeTable(String tableName,List<TableColumn> columns,List<Map<String,String>> data){
+    public String writeTable(String tableName,List<TableColumn> columns,List<Map<String,Object>> data){
         String newTable = tableName + System.currentTimeMillis();
         try {
             // 创建临时表
@@ -86,14 +86,21 @@ public class CommonServiceImpl implements CommonService {
         return res;
     }
     @Override
-    public void ToDataDesensitization(List<Map<String, String>> data) {
+    public void ToDataDesensitization(List<Map<String, Object>> data) {
         // 进行脱敏处理
         data.forEach((a)->{
             for(String key : a.keySet()){
-                String val = a.get(key);
+                if(key.contains("id")){
+                    continue;
+                }
+                String val = a.get(key).toString();
                 // 判断val是否是数字能够eTPSS处理的类型
                 if(val.matches("\\d+")){
                     AlgoEtpssService.Etpss one = etpssService.Share(val);
+
+                    // 恢复原数据看看怎么样
+                    String s = etpssService.Recover(one).toString();
+
                     // 处理之后的数值
                     String str = etpssService.Object2String(one);
                     // 覆盖数值

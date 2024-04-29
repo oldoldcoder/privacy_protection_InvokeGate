@@ -12,12 +12,12 @@ public interface AlgoEtpssService {
 
 
     // 初始化变量
-    static BigInteger MOD =new BigInteger(String.valueOf(Math.pow(2,128)));
+    BigInteger MOD = BigInteger.valueOf(2).pow(65);
     Random rand = new Random(System.currentTimeMillis());
     /**
      * 定义分隔符
      * */
-    static String SEPARATOR = "#";
+    String SEPARATOR = "#";
 
     // 分享
     public Etpss Share(BigInteger val);

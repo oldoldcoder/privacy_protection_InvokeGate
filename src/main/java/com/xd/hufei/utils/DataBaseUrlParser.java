@@ -18,9 +18,9 @@ public class DataBaseUrlParser {
             if (userInfo != null) {
                 String[] parts = userInfo.split(":");
                 if (parts.length == 2) {
-                    // TODO 目前这里是暂时的计策，后续如果没有特殊符号传递，我应该会就这样留着
-                    username = "root";
-                    password = "T3stP@ssw0rd!";
+
+                    username = parts[0];
+                    password = parts[1];
                 }
             }
             String host = uri.getHost();
