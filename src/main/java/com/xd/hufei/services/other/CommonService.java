@@ -1,9 +1,10 @@
 package com.xd.hufei.services.other;
 
-import com.xd.hufei.dto.other.DesensitizedData;
+import com.xd.hufei.dto.other.TableColumn;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author heqi
@@ -13,13 +14,14 @@ import java.util.List;
 public interface CommonService {
 
     // 动态的切换数据源
-    public int switchDataSources(String url);
+    int switchDataSources(String url);
     // 进行读取数据源
-    public List<DesensitizedData> readTableGetList(String tableName);
-    // 写文件到指定位置
-    public int saveFile(String path,List<DesensitizedData> data);
-    // 执行得到结果文件
-    public int execETPSS(String execPath);
+    List<Map<String,String>> readTableGetList(String tableName);
     // 读取结果文件，写入,返回的表名
-    public String readFileAndWriteTable(String path);
+    String writeTable(String tableName,List<TableColumn> columns,List<Map<String,String>> data);
+    // 获取目标表的结构，同时创建表的结构到我们的这里
+    List<TableColumn> getTableStructure(String dataBaseName,String tableName);
+    // 处理数据，进行一次脱敏的处理
+    void  ToDataDesensitization(List<Map<String,String>> data);
+
 }

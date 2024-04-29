@@ -29,5 +29,32 @@ public class PathResolveUtils {
     @Value("${path.notDistributed.range_search.queryFile}")
     public String pathRangeSearchQueryFile;
 
+    @Value("${path.notDistributed.rsq.data}")
+    public String pathRSQData;
+    @Value("${path.notDistributed.rsq.res}")
+    public String pathRSQRes;
+    @Value("${path.notDistributed.rsq.queryFile}")
+    public String pathRSQQueryFile;
+
+    @Value("${path.notDistributed.skyline.data}")
+    public String pathSkyLineData;
+    @Value("${path.notDistributed.skyline.res}")
+    public String pathSkyLineRes;
+    @Value("${path.notDistributed.skyline.queryFile}")
+    public String pathSkyLineQueryFile;
+
+    @Value("${path.notDistributed.skq.data}")
+    public String pathSKQData;
+    @Value("${path.notDistributed.skq.res}")
+    public String pathSKQRes;
+    @Value("${path.notDistributed.skq.queryFile}")
+    public String pathSKQQueryFile;
+
+    @Value("${path.notDistributed.ssq.data}")
+    public String pathSSQData;
+    @Value("${path.notDistributed.ssq.res}")
+    public String pathSSQRes;
+    @Value("${path.notDistributed.ssq.queryFile}")
+    public String pathSSQQueryFile;
 
 }

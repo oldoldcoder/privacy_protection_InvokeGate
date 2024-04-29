@@ -1,7 +1,7 @@
 package com.xd.hufei.controller.notDistributed;
 
 import com.xd.hufei.controller.BaseController;
-import com.xd.hufei.services.notDistributed.RangeSearchService;
+import com.xd.hufei.services.notDistributed.RSQService;
 import com.xd.hufei.utils.PathResolveUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,29 +19,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/ND/range_search")
-@Api("非分布式-kdtree查询算法的controller")
+@RequestMapping("/DN/rsq")
+@Api("非分布式-rsq查询算法的controller内容")
 @Slf4j
-public class RangeSearchController extends BaseController {
-    // 对应端口
-    @Value("${port.notDistributed.range_search}")
+public class RSQController extends BaseController {
+
+    @Value("${port.notDistributed.rsq}")
     private String PORT;
-    // 对应地址
+
     @Value("${port.address}")
     private String ADDRESS;
 
-
     @Autowired
-    RangeSearchService service;
+    RSQService service;
+
     @Autowired
     PathResolveUtils pathResolveUtils;
 
@@ -53,13 +47,13 @@ public class RangeSearchController extends BaseController {
     }
 
 
-    @ApiOperation("非分布式-range_search数据文件上传，同时初始化构建")
+    @ApiOperation("非分布式-rsq数据文件上传，同时初始化构建")
     @PostMapping("/init")
     public ResponseEntity<String> init(@ApiParam(value = "上传的文件,格式为n d\n后续为d行" +
             "n列",required = true) @RequestParam("file")MultipartFile file){
         try {
             // 保存date数据
-            service.saveFile(file,pathResolveUtils.pathRangeSearchData);
+            service.saveFile(file,pathResolveUtils.pathRSQData);
             String resp = service.sendInit2C(this.out,this.in);
             // 假设成功处理后返回一个成功消息
             return ResponseEntity.ok(resp);
@@ -69,15 +63,16 @@ public class RangeSearchController extends BaseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
     }
-    @ApiOperation("非分布式-range_search查询文件上传,同时查询")
+    @ApiOperation("非分布式-rsq查询文件上传,同时查询")
     @PostMapping("/query")
     public ResponseEntity<String> query(@ApiParam(value = "上传的文件,具体为查询的参数"
             ,required = true) @RequestParam("file")MultipartFile file){
         try {
             // 保存date数据
-            service.saveFile(file,pathResolveUtils.pathRangeSearchQueryFile);
+            service.saveFile(file,pathResolveUtils.pathRSQQueryFile);
             String resp = service.sendQuery2C(this.out,this.in);
             //TODO 对于成功之后的文件处理操作
+
             // 假设成功处理后返回一个成功消息
             return ResponseEntity.ok(resp);
         } catch (Exception e) {
@@ -87,7 +82,7 @@ public class RangeSearchController extends BaseController {
         }
     }
 
-    @ApiOperation("非分布式-range_search停止程序，销毁内容")
+    @ApiOperation("非分布式-rsq停止程序，销毁内容")
     @PostMapping("/stop")
     public ResponseEntity<String> stop(){
         try {
@@ -99,7 +94,4 @@ public class RangeSearchController extends BaseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
     }
-
-
-
 }

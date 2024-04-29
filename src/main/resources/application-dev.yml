@@ -23,29 +23,32 @@ path:
       data : "/root/project4/data/range_search/data.txt"
       queryFile : "/root/project4/data/range_search/query.txt"
       res : "/root/project4/data/range_search/res.txt"
-#    rsq:
-#      cmd: ""
-#      data: ""
-#      res: ""
-#    skyline:
-#      cmd: ""
-#      data: ""
-#      res: ""
-#    skq:
-#      cmd: ""
-#      data: ""
-#      res: ""
-#    ssq:
-#      cmd: ""
-#      data: ""
-#      res: ""
+    rsq:
+      data: "/root/project4/data/rsq/data.txt"
+      queryFile: "/root/project4/data/rsq/query.txt"
+      res: "/root/project4/data/rsq/res.txt"
+    skyline:
+      data: "/root/project4/data/skyline/data.txt"
+      queryFile: "/root/project4/data/skyline/query.txt"
+      res: "/root/project4/data/skyline/res.txt"
+    skq:
+      data: "/root/project4/data/skq/data.txt"
+      queryFile: "/root/project4/data/skq/query.txt"
+      res: "/root/project4/data/skq/res.txt"
+    ssq:
+      data: "/root/project4/data/ssq/data.txt"
+      queryFile: "/root/project4/data/ssq/query.txt"
+      res: "/root/project4/data/ssq/res.txt"
 port:
+  address: "10.170.53.52"
   distributed:
 
   notDistributed:
-    range_search:
-      port: "9990"
-      address: "10.170.53.52"
+    range_search: "9990"
+    rsq: "9991"
+    skyline: "9992"
+    skq: "9993"
+    ssq: "9994"
 
 spring:
   servlet:
