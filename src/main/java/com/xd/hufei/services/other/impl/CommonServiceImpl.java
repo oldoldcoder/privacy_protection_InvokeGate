@@ -10,18 +10,22 @@ import com.xd.hufei.utils.DataBaseUrlParser;
 import com.xd.hufei.utils.DynamicDataSource;
 import com.xd.hufei.utils.PathResolveUtils;
 import com.xd.hufei.utils.StatusUtils;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PreDestroy;
 import java.io.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 @Service
 @Slf4j
@@ -35,7 +39,11 @@ public class CommonServiceImpl implements CommonService {
 
     @Autowired
     AlgoEtpssService etpssService;
-    // 出错应该删除当前的数据库链接
+
+    // 创建线程池
+    private final ThreadPoolExecutor threadPool = new ThreadPoolExecutor(8, 16, 100,
+            TimeUnit.SECONDS, new LinkedBlockingQueue<>(),new ThreadPoolExecutor.CallerRunsPolicy());
+
     @Override
     public int switchDataSources(String url) {
         try{
@@ -52,6 +60,7 @@ public class CommonServiceImpl implements CommonService {
                 // 创建新的数据源
                 assert info != null;
                 dynamicDataSource.createDataSource(name,info.getHost(),info.getPort() + "",info.getDatabase(),info.getUsername(),info.getPassword());
+                log.info("连接：" + info.toString());
                 return StatusUtils.SUCCESS;
             }
         }catch (Exception e){
@@ -62,7 +71,40 @@ public class CommonServiceImpl implements CommonService {
     }
 
     public List<Map<String,Object>> readTableGetList(String tableName){
-        List<Map<String,Object>> res = commonMapper.getDataFromTable(tableName);
+        // 读取库里的数量
+        Integer count = commonMapper.selectCount(tableName);
+        List<Map<String,Object>> res = null;
+        final Object lock = new Object();
+        if(count > 10000){
+            //分批次读取
+            res = new ArrayList<>(count);
+            int batchSize = 10000;
+            int numBatches = (int) Math.ceil((double) count / batchSize);
+
+            List<Future<List<Map<String, Object>>>> futures = new ArrayList<>();
+
+            for (int i = 0; i < numBatches; i++) {
+                final int batchStart = i * batchSize;
+                final int batchEnd = Math.min(batchStart + batchSize, count);
+                futures.add(threadPool.submit(() -> {
+                    DynamicDataSource.threadLocal.set("new");
+                    List<Map<String, Object>> ret = commonMapper.getDataFromTable(tableName, batchStart, batchSize);
+                    log.info(batchStart + "--" + batchEnd + "--" + "size:" + ret.size());
+                    return ret;
+                }));
+
+            }
+            for (Future<List<Map<String, Object>>> future : futures) {
+                try {
+                    List<Map<String, Object>> maps = future.get();
+                    res.addAll(maps);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }else{
+            res = commonMapper.getDataFromTable(tableName,0,count);
+        }
         return res;
     }
     // 读取结果文件，写入,返回的表名
@@ -71,8 +113,35 @@ public class CommonServiceImpl implements CommonService {
         try {
             // 创建临时表
             commonMapper.createCopyTable(newTable,columns);
-            // 写入数据
-            commonMapper.insertNewData(data,newTable);
+            // 如果数据量小于1000则自己插入
+            if(data.size() <= 10000){
+                commonMapper.insertNewDataFromList(data,newTable);
+            }else{
+                int size = data.size();
+                int batchSize = 10000;
+                int numBatches = (int) Math.ceil((double) size / batchSize);
+                CountDownLatch latch = new CountDownLatch(numBatches); // 用于等待所有线程执行完成
+
+                for (int i = 0; i < numBatches; i++) {
+                    final int batchStart = i * batchSize;
+                    final int batchEnd = Math.min(batchStart + batchSize, size);
+                    threadPool.submit(() -> {
+                        DynamicDataSource.threadLocal.set("default");
+                        try {
+                            for (int j = batchStart; j < batchEnd; ++j) {
+                                commonMapper.insertNewDataOne(data.get(j), newTable);
+                            }
+                        }
+                        catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        finally {
+                            latch.countDown();
+                        }
+                    });
+                }
+                latch.await();
+            }
             return newTable;
         }catch (Exception e){
             e.printStackTrace();
@@ -82,32 +151,81 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public List<TableColumn> getTableStructure(String dataBaseName, String tableName) {
-        List<TableColumn> res = commonMapper.getTableStructure(dataBaseName, tableName);
-        return res;
+        return commonMapper.getTableStructure(dataBaseName, tableName);
     }
     @Override
     public void ToDataDesensitization(List<Map<String, Object>> data) {
-        // 进行脱敏处理
-        data.forEach((a)->{
-            for(String key : a.keySet()){
+
+        ConsumerData consumerData = new ConsumerData(etpssService);
+        if(data.size() <= 10000){
+            // 进行脱敏处理
+            data.forEach(consumerData);
+        }else{
+            int size = data.size();
+            int batchSize = 10000;
+            int numBatches = (int) Math.ceil((double) size / batchSize);
+            CountDownLatch latch = new CountDownLatch(numBatches); // 用于等待所有线程执行完成
+
+            for (int i = 0; i < numBatches; i++) {
+                final int batchStart = i * batchSize;
+                final int batchEnd = Math.min(batchStart + batchSize, size);
+                threadPool.submit(() -> {
+                    try {
+                        for(int j = batchStart; j < batchEnd ; ++j){
+                            Map<String, Object> map = data.get(j);
+                            consumerData.accept(map);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }finally {
+                        latch.countDown();
+                    }
+                });
+            }
+
+            try {
+                latch.await();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+    @PreDestroy
+    public void shutdown(){
+        threadPool.shutdown();
+    }
+
+    public static class ConsumerData implements Consumer<Map<String,Object>> {
+
+        AlgoEtpssService etpssService;
+        public ConsumerData(AlgoEtpssService service){
+            etpssService = service;
+        }
+        @Override
+        public void accept(Map<String, Object> map) {
+            for(String key : map.keySet()){
                 if(key.contains("id")){
                     continue;
                 }
-                String val = a.get(key).toString();
+                String val = map.get(key).toString();
                 // 判断val是否是数字能够eTPSS处理的类型
                 if(val.matches("\\d+")){
                     AlgoEtpssService.Etpss one = etpssService.Share(val);
 
                     // 恢复原数据看看怎么样
                     String s = etpssService.Recover(one).toString();
-
+                    if(!s.equals(val)){
+                        log.error("eTPSS加密失败");
+                    }
                     // 处理之后的数值
                     String str = etpssService.Object2String(one);
                     // 覆盖数值
-                    a.put(key,str);
+                    map.put(key,str);
                 }
             }
-        });
+        }
     }
 
     /*@Override

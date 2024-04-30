@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xd.hufei.mapper.other.CommonMapper">
 
-    <insert id="insertNewData" parameterType="java.util.List">
+    <insert id="insertNewDataFromList" parameterType="java.util.List">
         INSERT INTO ${tableName}
         (
         <foreach collection="list[0].keySet()" item="column" separator=",">
@@ -27,20 +27,42 @@
                     (${column.characterMaximumLength})
                 </if>
             </foreach>
+            ,
             PRIMARY KEY (${columns[0].columnName})
             );
         </if>
+    </insert>
+    <insert id="insertNewDataOne" parameterType="java.util.Map">
+        INSERT INTO ${tableName}
+        <!-- 获取Map中的键值对，并拼接成插入语句中的列名和值 -->
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <foreach collection="val" index="key" item="value" separator=",">
+                ${key}
+            </foreach>
+        </trim>
+        VALUES
+        <!-- 获取Map中的值，并拼接成插入语句中的值 -->
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <foreach collection="val" index="key" item="value" separator=",">
+                #{value}
+            </foreach>
+        </trim>
     </insert>
 
     <select id="getDataFromTable" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT *
         FROM ${tableName}
+        LIMIT #{start}, #{end}
     </select>
 
     <select id="getTableStructure" resultType="com.xd.hufei.dto.other.TableColumn">
         SELECT column_name, data_type, character_maximum_length
         FROM information_schema.columns
         WHERE table_schema = #{databaseName} AND table_name = #{tableName}
+    </select>
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(*)
+        FROM ${tableName}
     </select>
 
 </mapper>

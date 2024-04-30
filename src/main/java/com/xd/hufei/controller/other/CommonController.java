@@ -6,6 +6,7 @@ import com.xd.hufei.services.other.CommonService;
 import com.xd.hufei.utils.PathResolveUtils;
 import com.xd.hufei.utils.StatusUtils;
 import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +19,22 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Api("统一处理的controller类")
 @RequestMapping("/common")
+@Slf4j
 public class CommonController {
 
     @Autowired
-    CommonService commonService;
-
+    private CommonService commonService;
     @Autowired
-    PathResolveUtils pathResolveUtils;
+    private PathResolveUtils pathResolveUtils;
+
 
     @ApiOperation("负责脱敏与数据加密")
     @ApiResponses(value = {
@@ -55,24 +61,22 @@ public class CommonController {
             if(data == null){
                 throw new IllegalArgumentException("从" + table + "读取数据失败");
             }
+            log.info("tableName:"+table+"-读取数据成功");
             // 处理数据，获取表的结构
             commonService.ToDataDesensitization(data);
+            log.info("tableName:"+table+"-数据处理成功");
             // 分离出来dataBaseName
             String dataBaseName = url.substring(url.lastIndexOf('/') + 1);
             List<TableColumn> tableStructure = commonService.getTableStructure(dataBaseName, table);
-
-            // 进行读取数据源
-            List<Map<String,Object>> data1 = commonService.readTableGetList(table);
+            log.info("tableName:"+table+"-获取了表的结构");
             // 切换本地数据库
             commonService.switchDataSources("default");
 
-            // 进行读取数据源
-            List<Map<String,Object>> data2 = commonService.readTableGetList(table);
             String newTable = commonService.writeTable(table, tableStructure, data);
-
             if(newTable == null){
                 throw new IOException("创建表写入内容错误");
             }
+            log.info("tableName:"+newTable+"-创建表写入数据成功");
             return ResponseEntity.ok(newTable);
         }catch (Exception e){
             e.printStackTrace();

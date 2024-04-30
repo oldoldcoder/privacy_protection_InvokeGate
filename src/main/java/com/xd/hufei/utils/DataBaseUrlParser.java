@@ -1,5 +1,6 @@
 package com.xd.hufei.utils;
 
+import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
@@ -18,7 +19,7 @@ public class DataBaseUrlParser {
             if (userInfo != null) {
                 String[] parts = userInfo.split(":");
                 if (parts.length == 2) {
-
+                    // TODO 目前这里是暂时的计策，后续如果没有特殊符号传递，我应该会就这样留着
                     username = parts[0];
                     password = parts[1];
                 }
@@ -36,7 +37,7 @@ public class DataBaseUrlParser {
             return null;
         }
         }
-
+    @ToString
     public static class DatabaseInfo {
         private final String url;
         private final String username;

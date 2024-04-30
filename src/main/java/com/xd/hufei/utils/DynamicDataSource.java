@@ -45,6 +45,9 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
+        // 设置连接池参数
+        dataSource.setMinEvictableIdleTimeMillis(30 * 60 * 1000); // 设置空闲连接的最小时间为30分钟
+        dataSource.setKeepAlive(true); // 设置保持长连接
 
         dataSourceMap.put(name,dataSource);
     }
