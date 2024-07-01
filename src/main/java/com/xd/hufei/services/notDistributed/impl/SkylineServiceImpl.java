@@ -112,9 +112,8 @@ public class SkylineServiceImpl implements SkylineService {
         saveParamsToFile(params,filePath.toString());
         String resultPathStr = skyline.query_algo((SkylineLibrary.Structures.skyline_data) session_data.get("data"), (SkylineLibrary.Structures.rtree) session_data.get("rtree"), filePath.toString());
         Path resultPath = Paths.get(resultPathStr);
-        Resource resource = new UrlResource(filePath.toUri());
 
-        return resource;
+        return new UrlResource(filePath.toUri());
 
     }
 
