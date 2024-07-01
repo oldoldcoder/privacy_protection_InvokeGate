@@ -1,16 +1,15 @@
 package com.xd.hufei.controller.notDistributed;
 
 
-import com.xd.hufei.controller.BaseController;
-import com.xd.hufei.services.notDistributed.RSQService;
 import com.xd.hufei.services.notDistributed.SkylineService;
-import com.xd.hufei.utils.PathResolveUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,78 +19,53 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/DN/skyline")
-@Api("非分布式-rsq查询算法的controller内容")
+@RequestMapping("/ND/skyline")
+@Api("非分布式-skyline查询算法的controller内容")
 @Slf4j
-public class SkylineController extends BaseController {
-
-    @Value("${port.notDistributed.skyline}")
-    private String PORT;
-
-    @Value("${port.address}")
-    private String ADDRESS;
+public class SkylineController {
 
     @Autowired
-    SkylineService service;
-
-    @Autowired
-    PathResolveUtils pathResolveUtils;
-
-    @PostConstruct
-    // 负责bean初始化的时候建立长连接
-    public void init(){
-        // 初始化内容
-        this.init(PORT,ADDRESS);
-    }
-
+    SkylineService skylineService;
 
     @ApiOperation("非分布式-skyline数据文件上传，同时初始化构建")
-    @PostMapping("/init")
-    public ResponseEntity<String> init(@ApiParam(value = "上传的文件,格式为n d\n后续为d行" +
-            "n列",required = true) @RequestParam("file") MultipartFile file){
+    @PostMapping("/initData")
+    public ResponseEntity<Object> init(@ApiParam(value = "上传的文件,格式为n d\n后续为d行" +
+            "n列",required = true) @RequestParam("file") MultipartFile file, HttpServletRequest request){
         try {
-            // 保存date数据
-            service.saveFile(file,pathResolveUtils.pathSkyLineData);
-            String resp = service.sendInit2C(this.out,this.in);
-            // 假设成功处理后返回一个成功消息
-            return ResponseEntity.ok(resp);
-        } catch (Exception e) {
-            // 如果发生异常，则返回一个错误消息
-            String errorMessage = "错误发生:" + e.getMessage();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+            Map<Object, Object> resultMap = skylineService.initAlgo(file, request);
+            return ResponseEntity.ok(resultMap);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while processing the request: " + e.getMessage());
         }
     }
     @ApiOperation("非分布式-skyline查询文件上传,同时查询")
     @PostMapping("/query")
-    public ResponseEntity<String> query(@ApiParam(value = "上传的文件,具体为查询的参数"
-            ,required = true) @RequestParam("file")MultipartFile file){
+    public ResponseEntity<Object> query(@ApiParam(value = "一次查询的参数，将会保存params为文件"
+            ,required = true) @RequestParam Map<Object, Object> params,
+                                        HttpServletRequest request){
         try {
-            // 保存date数据
-            service.saveFile(file,pathResolveUtils.pathSkyLineQueryFile);
-            String resp = service.sendQuery2C(this.out,this.in);
-            //TODO 对于成功之后的文件处理操作
-
-            // 假设成功处理后返回一个成功消息
-            return ResponseEntity.ok(resp);
-        } catch (Exception e) {
-            // 如果发生异常，则返回一个错误消息
-            String errorMessage = "错误发生:" + e.getMessage();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+            Resource resource = skylineService.queryAlgo(params, request);
+            // 文件可达，返回我的文件
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                // 未找到文件
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("File not found: " + resource.getFilename());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while processing the request: " + e.getMessage());
         }
     }
 
-    @ApiOperation("非分布式-skyline停止程序，销毁内容")
-    @PostMapping("/stop")
-    public ResponseEntity<String> stop(){
-        try {
-            String resp = service.sendEnd2C(this.out,this.in);
-            return ResponseEntity.ok(resp);
-        } catch (Exception e) {
-            // 如果发生异常，则返回一个错误消息
-            String errorMessage = "错误发生:" + e.getMessage();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
-        }
-    }
 }

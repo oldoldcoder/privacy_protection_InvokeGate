@@ -64,7 +64,7 @@ public class CommonServiceImpl implements CommonService {
                 return StatusUtils.SUCCESS;
             }
         }catch (Exception e){
-            e.printStackTrace();
+            throw e;
         }
 
         return StatusUtils.ERROR;

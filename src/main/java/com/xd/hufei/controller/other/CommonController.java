@@ -3,7 +3,6 @@ package com.xd.hufei.controller.other;
 
 import com.xd.hufei.dto.other.TableColumn;
 import com.xd.hufei.services.other.CommonService;
-import com.xd.hufei.utils.PathResolveUtils;
 import com.xd.hufei.utils.StatusUtils;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +31,6 @@ public class CommonController {
 
     @Autowired
     private CommonService commonService;
-    @Autowired
-    private PathResolveUtils pathResolveUtils;
-
 
     @ApiOperation("负责脱敏与数据加密")
     @ApiResponses(value = {

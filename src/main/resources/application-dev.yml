@@ -3,9 +3,6 @@ server:
 # 存储文件的路径
 path:
   eTPSS:
-    cmd: "/root/project4/c/eTPSS/build/eTPSS"
-    #    data: "/root/project4/data/eTPSS/data.txt"
-    #    res : "/root/project4/data/eTPSS/res.txt"
     data: "data/data.txt"
     res: "data/res.txt"
 #path:
@@ -39,16 +36,6 @@ path:
       data: "/root/project4/data/ssq/data.txt"
       queryFile: "/root/project4/data/ssq/query.txt"
       res: "/root/project4/data/ssq/res.txt"
-port:
-  address: "10.170.53.52"
-  distributed:
-
-  notDistributed:
-    range_search: "9990"
-    rsq: "9991"
-    skyline: "9992"
-    skq: "9993"
-    ssq: "9994"
 
 spring:
   servlet:
@@ -62,7 +49,7 @@ spring:
     druid:
       url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai
       username: "root"
-      password: "011013"
+      password: "T3stP@ssw0rd!"
       initialSize: 5
       minIdle: 5
       maxActive: 50
@@ -77,4 +64,3 @@ logging:
   level:
     root: INFO
 
-cmd: "/root/project4/c/range_search/build/range_search"

@@ -7,4 +7,7 @@ mybatis:
   type-aliases-package: com.xd.hufei.dto
   configuration:
     map-underscore-to-camel-case: true
-isPrivacyActivated: false
+server:
+  servlet:
+    session:
+      timeout: 30m
