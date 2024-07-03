@@ -18,7 +18,7 @@ import javax.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/ND/range_search")
-@Api("非分布式-kdtree查询算法的controller")
+@Api("非分布式-kdtree范围查询查询算法的controller")
 @Slf4j
 public class RangeSearchController {
 

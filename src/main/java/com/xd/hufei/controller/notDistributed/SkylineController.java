@@ -46,11 +46,15 @@ public class SkylineController {
     }
     @ApiOperation("非分布式-skyline查询文件上传,同时查询")
     @PostMapping("/query")
-    public ResponseEntity<Object> query(@ApiParam(value = "一次查询的参数，将会保存params为文件"
-            ,required = true) @RequestParam Map<Object, Object> params,
+    public ResponseEntity<Object> query(@ApiParam(value = "查询的文件，按照标准格式上传，适合复杂的格式"
+            ,required = false)
+                                        @RequestParam(value = "file", required = false) MultipartFile file,
+                                        @ApiParam(value = "查询参数，按照简单格式上传，适合简单的格式"
+            ,required = false)
+                                        @RequestParam(value = "params", required = false) Map<Object, Object> params,
                                         HttpServletRequest request){
         try {
-            Resource resource = skylineService.queryAlgo(params, request);
+            Resource resource = skylineService.queryAlgo(file,params, request);
             // 文件可达，返回我的文件
             if (resource.exists() || resource.isReadable()) {
                 return ResponseEntity.ok()

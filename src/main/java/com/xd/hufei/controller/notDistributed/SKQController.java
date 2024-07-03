@@ -20,7 +20,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/ND/skq")
-@Api("非分布式-skq查询算法的controller内容")
+@Api("非分布式-安全关键字查询查询算法的controller内容")
 @Slf4j
 public class SKQController {
 

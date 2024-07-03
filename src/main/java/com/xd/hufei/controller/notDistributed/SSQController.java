@@ -21,7 +21,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/ND/ssq")
-@Api("非分布式-ssq查询算法的controller内容")
+@Api("非分布式-相似性查询查询算法的controller内容")
 @Slf4j
 public class SSQController {
 
