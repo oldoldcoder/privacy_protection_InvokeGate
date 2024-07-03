@@ -3,7 +3,7 @@ package com.xd.hufei.controller.other;
 
 import com.xd.hufei.dto.other.TableColumn;
 import com.xd.hufei.services.other.CommonService;
-import com.xd.hufei.utils.StatusUtils;
+import com.xd.hufei.utils.ETPSSConstant;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class CommonController {
     ) @RequestParam("url")String url){
         try{
             // 动态的切换数据源
-            if(commonService.switchDataSources(url) == StatusUtils.ERROR){
+            if(commonService.switchDataSources(url) == ETPSSConstant.ERROR){
                 throw new IllegalArgumentException("动态切换数据源错误");
             }
             // 进行读取数据源
