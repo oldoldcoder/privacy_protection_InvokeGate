@@ -42,17 +42,10 @@ public class SSQServiceImpl implements SSQService {
             session.setAttribute("ssq",null);
         }
 
-        // 保存文件到具体位置
-        Map<Object, Object> result = new HashMap<>();
-
         // 保存文件到SSQ
         Path filePath = ToolUtils.saveFile(file,"ssq");
 
-        String firstLine = Files.readAllLines(filePath).get(0);
-        String[] split = firstLine.split(" ");
-
-        result.put("totals", split[0]);
-        result.put("dim", split[1]);
+        Map<Object, Object> result = ToolUtils.fillResultMap(filePath);
 
         SSQLibrary.Structures.SSQ_data data = new SSQLibrary.Structures.SSQ_data();
 
@@ -73,7 +66,7 @@ public class SSQServiceImpl implements SSQService {
         sessionData.put("kArr",kArr);
         // 数据存放到session之中去
         session.setAttribute("ssq",sessionData);
-        return null;
+        return result;
     }
 
     @Override

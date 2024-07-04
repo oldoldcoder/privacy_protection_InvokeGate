@@ -49,21 +49,11 @@ public class SkylineServiceImpl implements SkylineService {
             // 设置为空，情况内容
             session.setAttribute("skyline",null);
         }
-        // 保存文件到具体位置
-        Map<Object, Object> result = new HashMap<>();
-
         // 保存文件
         Path filePath = ToolUtils.saveFile(file,"skyline");
 
         log.info("保存文件成功...");
-        // 读取文件前一行，返回解析结果
-        // 假设我们只是读取第一行内容，实际解析逻辑需要根据文件格式和需求来实现
-        String firstLine = Files.readAllLines(filePath).get(0);
-        String[] split = firstLine.split(" ");
-
-        result.put("totals", split[0]);
-        result.put("dim", split[1]);
-
+        Map<Object, Object> result = ToolUtils.fillResultMap(filePath);
 
         SkylineLibrary.Structures.skyline_data data =  new SkylineLibrary.Structures.skyline_data();
         SkylineLibrary.Structures.rtree tree = new  SkylineLibrary.Structures.rtree();

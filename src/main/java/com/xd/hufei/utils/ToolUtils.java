@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ToolUtils {
@@ -68,5 +69,14 @@ public class ToolUtils {
             file.transferTo(filePath.toFile());
         }
         return filePath;
+    }
+
+    public static Map<Object,Object> fillResultMap(Path filePath) throws IOException {
+        String firstLine = Files.readAllLines(filePath).get(0);
+        String[] split = firstLine.split(" ");
+        Map<Object,Object> result = new HashMap<>();
+        result.put("totals", split[0]);
+        result.put("dim", split[1]);
+        return result;
     }
 }
