@@ -1,5 +1,7 @@
 package com.xd.hufei.listener;
 
+import com.xd.hufei.Library.RSQLibrary;
+import com.xd.hufei.Library.RangeSearchLibrary;
 import com.xd.hufei.Library.SSQLibrary;
 import com.xd.hufei.Library.SkylineLibrary;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,9 @@ public class SessionListener implements HttpSessionListener {
         log.info("销毁的sessionID：" + se.getSession().getId());
         SkylineLibrary.SkylineInterface skyline = SkylineLibrary.SkylineInterface.INSTANCE;
         SSQLibrary.SSQInterface ssq = SSQLibrary.SSQInterface.INSTANCE;
+        RSQLibrary.RSQInterface rsq = RSQLibrary.RSQInterface.INSTANCE;
+        RangeSearchLibrary.RangeSearchInterface rangeSearch = RangeSearchLibrary.RangeSearchInterface.INSTANCE;
+
         // 获取所有属性名的枚举
         Enumeration<String> attributeNames = se.getSession().getAttributeNames();
         while (attributeNames.hasMoreElements()){
@@ -38,6 +43,20 @@ public class SessionListener implements HttpSessionListener {
                                 (SSQLibrary.Structures.SSQ_data) session_data.get("kArr"));
                         // 设置为空，情况内容
                         se.getSession().setAttribute("ssq",null);
+                        break;
+                    case "rsq":
+                        rsq.free_algo(( RSQLibrary.Structures.RSQ_data) session_data.get("data"),
+                                ( RSQLibrary.Structures.mr_tree) session_data.get("tree"));
+                        // 设置为空，情况内容
+                        se.getSession().setAttribute("rsq",null);
+                        break;
+                    case "range_search":
+                        rangeSearch.free_algo((RangeSearchLibrary.Structures.PtreeB_data) session_data.get("data"),
+                                (RangeSearchLibrary.Structures.kd_tree) session_data.get("tree"));
+                        se.getSession().setAttribute("range_search",null);
+                        break;
+                    case "skq":
+
                         break;
                     default:
                         log.error("无效的session存储，key：" + attributeName);

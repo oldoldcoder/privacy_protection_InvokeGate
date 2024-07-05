@@ -71,7 +71,4 @@ public class RangeSearchController {
                     .body("An error occurred while processing the request: " + e.getMessage());
         }
     }
-
-
-
 }
