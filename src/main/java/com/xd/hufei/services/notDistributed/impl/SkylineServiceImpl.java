@@ -68,6 +68,8 @@ public class SkylineServiceImpl implements SkylineService {
 
         // 数据存放到session之中去
         session.setAttribute("skyline",sessionData);
+        log.info("sessionId:" + session.getId());
+        log.info("存储的内容是：" + session.getAttribute("skyline"));
         return result;
     }
 

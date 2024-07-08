@@ -59,6 +59,8 @@ public class RangeSearchServiceImpl implements RangeSearchService {
         sessionData.put("tree",tree);
         // 数据存放到session之中去
         session.setAttribute("range_search",sessionData);
+        log.info("sessionId:" + session.getId());
+        log.info("存储的内容是：" + session.getAttribute("range_search"));
         return result;
     }
 

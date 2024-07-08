@@ -21,6 +21,7 @@ import java.util.Map;
 @Service
 @Slf4j
 public class RSQServiceImpl implements RSQService {
+
     @Override
     public Map<Object, Object> initAlgo(MultipartFile file, HttpServletRequest request) throws Exception {
         RSQLibrary.RSQInterface instance = RSQLibrary.RSQInterface.INSTANCE;
@@ -57,6 +58,8 @@ public class RSQServiceImpl implements RSQService {
         sessionData.put("tree",tree);
         // 数据存放到session之中去
         session.setAttribute("rsq",sessionData);
+        log.info("sessionId:" + session.getId());
+        log.info("存储的内容是：" + session.getAttribute("rsq"));
         return result;
     }
 
@@ -66,9 +69,11 @@ public class RSQServiceImpl implements RSQService {
         // 获取session存放的数据
         HttpSession session = request.getSession();
         Map<String,Object> session_data = (Map<String, Object>) session.getAttribute("rsq");
+
         if(session_data == null) {
             throw new Exception("session存放数据失效，重新上传");
         }
+
         Path filePath = ToolUtils.saveQueryFile(file,params,"rsq");
         // 执行查询算法
         int result = instance.query_algo((RSQLibrary.Structures.RSQ_data) session_data.get("data"),

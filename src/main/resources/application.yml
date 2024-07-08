@@ -11,3 +11,7 @@ server:
   servlet:
     session:
       timeout: 30m
+      cookie:
+        http-only: false
+        same-site: none
+        secure: true

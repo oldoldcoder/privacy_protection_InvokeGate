@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class ToolUtils {
 
@@ -72,11 +73,16 @@ public class ToolUtils {
     }
 
     public static Map<Object,Object> fillResultMap(Path filePath) throws IOException {
-        String firstLine = Files.readAllLines(filePath).get(0);
-        String[] split = firstLine.split(" ");
+        int total = Files.readAllLines(filePath).size();
         Map<Object,Object> result = new HashMap<>();
-        result.put("totals", split[0]);
-        result.put("dim", split[1]);
+        result.put("totals", total);
+        result.put("dim", "安全关键字查询无dim");
         return result;
+    }
+
+    // 生成唯一标识
+    private String generateUniqueIdentifier() {
+        // 实现你的唯一标识符生成逻辑，可以使用 UUID 等方式生成
+        return UUID.randomUUID().toString();
     }
 }

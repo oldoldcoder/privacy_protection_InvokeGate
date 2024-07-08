@@ -8,7 +8,7 @@ import com.xd.hufei.services.other.AlgoEtpssService;
 import com.xd.hufei.services.other.CommonService;
 import com.xd.hufei.utils.DataBaseUrlParser;
 import com.xd.hufei.utils.DynamicDataSource;
-import com.xd.hufei.utils.StatusUtils;
+import com.xd.hufei.utils.ETPSSConstant;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
@@ -60,13 +60,13 @@ public class CommonServiceImpl implements CommonService {
                 assert info != null;
                 dynamicDataSource.createDataSource(name,info.getHost(),info.getPort() + "",info.getDatabase(),info.getUsername(),info.getPassword());
                 log.info("连接：" + info.toString());
-                return StatusUtils.SUCCESS;
+                return ETPSSConstant.SUCCESS;
             }
         }catch (Exception e){
             throw e;
         }
 
-        return StatusUtils.ERROR;
+        return ETPSSConstant.ERROR;
     }
 
     public List<Map<String,Object>> readTableGetList(String tableName){

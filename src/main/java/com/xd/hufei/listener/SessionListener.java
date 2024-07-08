@@ -1,9 +1,6 @@
 package com.xd.hufei.listener;
 
-import com.xd.hufei.Library.RSQLibrary;
-import com.xd.hufei.Library.RangeSearchLibrary;
-import com.xd.hufei.Library.SSQLibrary;
-import com.xd.hufei.Library.SkylineLibrary;
+import com.xd.hufei.Library.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpSessionEvent;
@@ -22,6 +19,7 @@ public class SessionListener implements HttpSessionListener {
         SSQLibrary.SSQInterface ssq = SSQLibrary.SSQInterface.INSTANCE;
         RSQLibrary.RSQInterface rsq = RSQLibrary.RSQInterface.INSTANCE;
         RangeSearchLibrary.RangeSearchInterface rangeSearch = RangeSearchLibrary.RangeSearchInterface.INSTANCE;
+        SKQLibrary.SKQInterface skq = SKQLibrary.SKQInterface.INSTANCE;
 
         // 获取所有属性名的枚举
         Enumeration<String> attributeNames = se.getSession().getAttributeNames();
@@ -56,10 +54,15 @@ public class SessionListener implements HttpSessionListener {
                         se.getSession().setAttribute("range_search",null);
                         break;
                     case "skq":
-
+                        // 调用algo清空C申请的内存，不然内存泄露
+                        skq.free_algo((SKQLibrary.Structures.DataOwner) session_data.get("data"));
+                        // 重新调用init_constant
+                        skq.init_constant();
+                        // 设置为空，情况内容
+                        se.getSession().setAttribute("skq",null);
                         break;
                     default:
-                        log.error("无效的session存储，key：" + attributeName);
+                        log.error("不能删除的session存储key，key：" + attributeName);
                         break;
                 }
             }

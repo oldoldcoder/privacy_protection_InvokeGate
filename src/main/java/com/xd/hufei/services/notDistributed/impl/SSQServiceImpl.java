@@ -66,14 +66,19 @@ public class SSQServiceImpl implements SSQService {
         sessionData.put("kArr",kArr);
         // 数据存放到session之中去
         session.setAttribute("ssq",sessionData);
+        log.info("sessionId:" + session.getId());
+        log.info("存储的内容是：" + session.getAttribute("ssq"));
         return result;
     }
 
     @Override
     public Resource queryAlgo(MultipartFile file, Map<Object, Object> params, HttpServletRequest request) throws Exception {
+
         SSQLibrary.SSQInterface instance = SSQLibrary.SSQInterface.INSTANCE;
         // 获取session存放的数据
         HttpSession session = request.getSession();
+
+        log.info("sessionId:" + session.getId());
         Map<String,Object> session_data = (Map<String, Object>) session.getAttribute("ssq");
         if(session_data == null) {
             throw new Exception("session存放数据失效，重新上传");
