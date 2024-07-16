@@ -77,7 +77,6 @@ public class SSQServiceImpl implements SSQService {
         SSQLibrary.SSQInterface instance = SSQLibrary.SSQInterface.INSTANCE;
         // 获取session存放的数据
         HttpSession session = request.getSession();
-
         log.info("sessionId:" + session.getId());
         Map<String,Object> session_data = (Map<String, Object>) session.getAttribute("ssq");
         if(session_data == null) {

@@ -92,11 +92,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.13</version>
         </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.4.5</version> <!-- 确保版本号是最新的 -->
-        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

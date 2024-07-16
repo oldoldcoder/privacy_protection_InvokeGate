@@ -1,7 +1,6 @@
 package com.xd.hufei.services.other.impl;
 
 
-import ch.qos.logback.classic.db.names.TableName;
 import com.xd.hufei.dto.other.TableColumn;
 import com.xd.hufei.mapper.other.CommonMapper;
 import com.xd.hufei.services.other.AlgoEtpssService;

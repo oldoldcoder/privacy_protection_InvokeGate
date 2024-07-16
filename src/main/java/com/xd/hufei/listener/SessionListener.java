@@ -21,6 +21,12 @@ public class SessionListener implements HttpSessionListener {
         RangeSearchLibrary.RangeSearchInterface rangeSearch = RangeSearchLibrary.RangeSearchInterface.INSTANCE;
         SKQLibrary.SKQInterface skq = SKQLibrary.SKQInterface.INSTANCE;
 
+        /*-----------------------下面是分布式的内容-------------------------*/
+        DD_SkylineLibrary.DD_SKYLINEInterface ddSkyline = DD_SkylineLibrary.DD_SKYLINEInterface.INSTANCE;
+        DD_SKQLibrary.DD_SKQInterface ddSkq = DD_SKQLibrary.DD_SKQInterface.INSTANCE;
+        DRQLibrary.DRQInterface drq = DRQLibrary.DRQInterface.INSTANCE;
+
+
         // 获取所有属性名的枚举
         Enumeration<String> attributeNames = se.getSession().getAttributeNames();
         while (attributeNames.hasMoreElements()){
@@ -61,6 +67,25 @@ public class SessionListener implements HttpSessionListener {
                         // 设置为空，情况内容
                         se.getSession().setAttribute("skq",null);
                         break;
+                    case "dd_skyline":
+                        ddSkyline.free_algo((DD_SkylineLibrary.Structures.DrqDataSet) session_data.get("data"));
+                        se.getSession().setAttribute("dd_skyline",null);
+                        break;
+                    case "dd_skq":
+                        ddSkq.free_algo((DD_SKQLibrary.Structures.DD_SKQDataSet) session_data.get("data"));
+                        se.getSession().setAttribute("dd_skq",null);
+                        break;
+                    case "dd_drq":
+                        drq.free_algo((DRQLibrary.Structures.DrqDataSet) session_data.get("data"));
+                        se.getSession().setAttribute("dd_drq",null);
+                        break;
+                    case"a":
+
+                        break;
+                    case "b":
+
+                        break;
+
                     default:
                         log.error("不能删除的session存储key，key：" + attributeName);
                         break;
