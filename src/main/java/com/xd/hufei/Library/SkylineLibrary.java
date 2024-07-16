@@ -18,7 +18,7 @@ public class SkylineLibrary {
         int init_algo(String dataFilePath, Structures.skyline_data data, Structures.rtree tree);
 
         // 定义query_algo方法，参数为skyline_data结构体指针、rtree结构体指针、查询文件路径
-        String query_algo(Structures.skyline_data data, Structures.rtree tree, String queryFilePath);
+        int query_algo(Structures.skyline_data data, Structures.rtree tree, String queryFilePath,String resultFilePath);
 
         // 定义free_algo方法，参数为skyline_data结构体指针、rtree结构体指针
         int free_algo(Structures.skyline_data data, Structures.rtree tree);

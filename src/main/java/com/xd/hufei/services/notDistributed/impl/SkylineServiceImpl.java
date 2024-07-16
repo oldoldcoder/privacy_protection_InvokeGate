@@ -3,6 +3,7 @@ package com.xd.hufei.services.notDistributed.impl;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.ptr.PointerByReference;
+import com.xd.hufei.Library.SSQLibrary;
 import com.xd.hufei.Library.SkylineLibrary;
 import com.xd.hufei.services.notDistributed.SkylineService;
 import com.xd.hufei.utils.ETPSSConstant;
@@ -84,9 +85,19 @@ public class SkylineServiceImpl implements SkylineService {
             throw new Exception("session存放数据失效，重新上传");
         }
         Path filePath = ToolUtils.saveQueryFile(file,params,"skyline");
-        String resultPathStr = skyline.query_algo((SkylineLibrary.Structures.skyline_data) session_data.get("data"), (SkylineLibrary.Structures.rtree) session_data.get("rtree"), filePath.toString());
-        Path resultPath = Paths.get(resultPathStr);
-        return new UrlResource(resultPath.toUri());
+        // 执行查询算法
+        int result = skyline.query_algo((SkylineLibrary.Structures.skyline_data) session_data.get("data"),
+                (SkylineLibrary.Structures.rtree) session_data.get("rtree"),
+                filePath.toString(),
+                filePath.getParent().resolve("search_res.txt").toString());
+
+        if (result != ETPSSConstant.SUCCESS) {
+            throw new Exception("SSQ查询失败");
+        }else{
+            log.info("SSQ查询成功，文件路径为：" + filePath.getParent().resolve("search_res.txt"));
+        }
+
+        return new UrlResource(filePath.getParent().resolve("search_res.txt").toUri());
 
     }
 
