@@ -14,7 +14,7 @@ public class DD_SKQLibrary {
         DD_SKQLibrary.DD_SKQInterface INSTANCE = Native.load("dd_skq", DD_SKQLibrary.DD_SKQInterface.class);
 
         // 定义原生方法
-        int init_algo(DD_SKQLibrary.Structures.DD_SKQDataSet set, String filePath);
+        int init_algo(String filePath,DD_SKQLibrary.Structures.DD_SKQDataSet set);
         int query_algo(DD_SKQLibrary.Structures.DD_SKQDataSet set, String queryPath, String resultFilePath);
         int free_algo(DD_SKQLibrary.Structures.DD_SKQDataSet set);
     }

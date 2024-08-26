@@ -38,7 +38,7 @@ public class SKQServiceImpl implements SKQService {
         // 保存文件到SKQ
         Path filePath = ToolUtils.saveFile(file,"skq");
 
-        Map<Object, Object> result = ToolUtils.fillResultMap(filePath);
+        Map<Object, Object> result = ToolUtils.fillResultMap(filePath,1);
 
         SKQLibrary.Structures.DataOwner data = new SKQLibrary.Structures.DataOwner();
 

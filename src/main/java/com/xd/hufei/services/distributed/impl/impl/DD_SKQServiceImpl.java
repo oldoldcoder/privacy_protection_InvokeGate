@@ -39,14 +39,14 @@ public class DD_SKQServiceImpl implements DD_SKQService {
         // 保存文件到SSQ
         Path filePath = ToolUtils.saveFile(file,"dd_skq");
 
-        Map<Object, Object> result = ToolUtils.fillResultMap(filePath);
+        Map<Object, Object> result = ToolUtils.fillResultMap(filePath,1);
 
         DD_SKQLibrary.Structures.DD_SKQDataSet data = new DD_SKQLibrary.Structures.DD_SKQDataSet();
 
         // 初始化算法
-        int initResult = instance.init_algo(data,filePath.toString());
+        int initResult = instance.init_algo(filePath.toString(),data);
         if (initResult !=  ETPSSConstant.SUCCESS) {
-            System.err.println("Failed to initialize algorithm");
+            log.error("Failed to initialize algorithm");
             throw new Exception("dd_skq初始化构建失败");
         }else{
             log.info("初始化构建成功");

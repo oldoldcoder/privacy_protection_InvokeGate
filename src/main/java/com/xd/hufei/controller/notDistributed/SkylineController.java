@@ -12,10 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
@@ -51,7 +48,7 @@ public class SkylineController {
                                         @RequestParam(value = "file", required = false) MultipartFile file,
                                         @ApiParam(value = "查询参数，按照简单格式上传，适合简单的格式"
             ,required = false)
-                                        @RequestParam(value = "params", required = false) Map<Object, Object> params,
+                                        @RequestParam(value = "param", required = false)Map<Object, Object> params,
                                         HttpServletRequest request){
         try {
             Resource resource = skylineService.queryAlgo(file,params, request);

@@ -8,6 +8,7 @@ import com.sun.jna.Native;
 
 public class ScComputingLibrary {
     public interface ScComputingInterface extends Library {
+
         ScComputingInterface INSTANCE =  Native.load("dd_cComputing", ScComputingInterface.class);
         /**
          * @param algoName:代表调用具体算法的名称

@@ -28,11 +28,10 @@ public class SkylineLibrary {
     // 定义结构体
     public static class Structures {
 
-
         public static class skyline_data extends Structure {
             public int dim;
             public int n;
-            public PointerByReference x_data;  // set_x**
+            public Pointer x_data;  // set_x**
 
             @Override
             protected List<String> getFieldOrder() {
@@ -43,25 +42,8 @@ public class SkylineLibrary {
             public static class ByValue extends skyline_data implements Structure.ByValue {}
         }
 
-        public static class rtree_node extends Structure {
-            public int dim;
-            public Pointer data;  // set_x*
-            public int is_left_node;
-            public PointerByReference range;  // eTPSS***
-            public ByReference left;
-            public ByReference right;
-
-            @Override
-            protected List<String> getFieldOrder() {
-                return List.of("dim", "data", "is_left_node", "range", "left", "right");
-            }
-
-            public static class ByReference extends rtree_node implements Structure.ByReference {}
-            public static class ByValue extends rtree_node implements Structure.ByValue {}
-        }
-
         public static class rtree extends Structure {
-            public rtree_node.ByReference root;
+            public Pointer root;
 
             @Override
             protected List<String> getFieldOrder() {
