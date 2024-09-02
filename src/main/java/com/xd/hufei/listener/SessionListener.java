@@ -15,10 +15,6 @@ public class SessionListener implements HttpSessionListener {
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
         log.info("销毁的sessionID：" + se.getSession().getId());
-        SkylineLibrary.SkylineInterface skyline = SkylineLibrary.SkylineInterface.INSTANCE;
-        SSQLibrary.SSQInterface ssq = SSQLibrary.SSQInterface.INSTANCE;
-        RSQLibrary.RSQInterface rsq = RSQLibrary.RSQInterface.INSTANCE;
-        RangeSearchLibrary.RangeSearchInterface rangeSearch = RangeSearchLibrary.RangeSearchInterface.INSTANCE;
         SKQLibrary.SKQInterface skq = SKQLibrary.SKQInterface.INSTANCE;
 
         /*-----------------------下面是分布式的内容-------------------------*/
@@ -35,30 +31,6 @@ public class SessionListener implements HttpSessionListener {
             if(session_data != null){
                 // 不同的存储进行不同的清空
                 switch (attributeName){
-                    case "skyline":
-                        skyline.free_algo((SkylineLibrary.Structures.skyline_data) session_data.get("data"), (SkylineLibrary.Structures.rtree) session_data.get("rtree"));
-                        // 设置为空，情况内容
-                        se.getSession().setAttribute("skyline",null);
-                        break;
-                    case "ssq":
-                        // 调用algo清空C申请的内存，不然内存泄露
-                        ssq.free_algo((SSQLibrary.Structures.SSQ_data) session_data.get("data"),
-                                (SSQLibrary.Structures.kd_tree) session_data.get("tree"),
-                                (SSQLibrary.Structures.SSQ_data) session_data.get("kArr"));
-                        // 设置为空，情况内容
-                        se.getSession().setAttribute("ssq",null);
-                        break;
-                    case "rsq":
-                        rsq.free_algo(( RSQLibrary.Structures.RSQ_data) session_data.get("data"),
-                                ( RSQLibrary.Structures.mr_tree) session_data.get("tree"));
-                        // 设置为空，情况内容
-                        se.getSession().setAttribute("rsq",null);
-                        break;
-                    case "range_search":
-                        rangeSearch.free_algo((RangeSearchLibrary.Structures.PtreeB_data) session_data.get("data"),
-                                (RangeSearchLibrary.Structures.kd_tree) session_data.get("tree"));
-                        se.getSession().setAttribute("range_search",null);
-                        break;
                     case "skq":
                         // 调用algo清空C申请的内存，不然内存泄露
                         skq.free_algo((SKQLibrary.Structures.DataOwner) session_data.get("data"));

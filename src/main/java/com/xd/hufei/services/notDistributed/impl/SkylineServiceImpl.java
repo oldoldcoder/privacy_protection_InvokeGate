@@ -43,34 +43,19 @@ public class SkylineServiceImpl implements SkylineService {
         // 删除之前session的数据
         log.info("检测session之前的数据");
         HttpSession session = request.getSession();
-        Map<String,Object> session_data = (Map<String, Object>) session.getAttribute("skyline");
-        if(session_data != null){
-            // 调用algo清空C申请的内存，不然内存泄露
-            skyline.free_algo((SkylineLibrary.Structures.skyline_data) session_data.get("data"), (SkylineLibrary.Structures.rtree) session_data.get("rtree"));
-            // 设置为空，情况内容
-            session.setAttribute("skyline",null);
-        }
+
         // 保存文件
         Path filePath = ToolUtils.saveFile(file,"skyline");
 
         log.info("保存文件成功...");
         Map<Object, Object> result = ToolUtils.fillResultMap(filePath);
 
-        SkylineLibrary.Structures.skyline_data data =  new SkylineLibrary.Structures.skyline_data();
-        SkylineLibrary.Structures.rtree tree = new  SkylineLibrary.Structures.rtree();
-        if(skyline.init_algo(filePath.toString(), data, tree) != ETPSSConstant.SUCCESS){
+        if(skyline.init_algo(filePath.toString()) != ETPSSConstant.SUCCESS){
             throw new Exception("初始化数据以及树结构失败");
         }else{
             log.info("初始化数据以及树结构成功");
         }
-        Map<String,Object> sessionData = new HashMap<>();
-        sessionData.put("data",data);
-        sessionData.put("rtree",tree);
-
-        // 数据存放到session之中去
-        session.setAttribute("skyline",sessionData);
         log.info("sessionId:" + session.getId());
-        log.info("存储的内容是：" + session.getAttribute("skyline"));
         return result;
     }
 
@@ -78,16 +63,10 @@ public class SkylineServiceImpl implements SkylineService {
     public Resource queryAlgo(MultipartFile file,Map<Object, Object> params,HttpServletRequest request) throws Exception{
 
         SkylineLibrary.SkylineInterface skyline = SkylineLibrary.SkylineInterface.INSTANCE;
-        // 获取session存放的数据
-        HttpSession session = request.getSession();
-        Map<String,Object> session_data = (Map<String, Object>) session.getAttribute("skyline");
-        if(session_data == null) {
-            throw new Exception("session存放数据失效，重新上传");
-        }
+
         Path filePath = ToolUtils.saveQueryFile(file,params,"skyline");
         // 执行查询算法
-        int result = skyline.query_algo((SkylineLibrary.Structures.skyline_data) session_data.get("data"),
-                (SkylineLibrary.Structures.rtree) session_data.get("rtree"),
+        int result = skyline.query_algo(
                 filePath.toString(),
                 filePath.getParent().resolve("search_res.txt").toString());
 
